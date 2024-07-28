@@ -1,0 +1,67 @@
+// Subject interface
+interface Subject {
+    void registerObserver(Observer o);
+    void removeObserver(Observer o);
+    void notifyObservers();
+}
+
+// Observer interface
+interface Observer {
+    void update(String news);
+}
+
+// Concrete Subject
+class NewsAgency implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+    private String latestNews;
+
+    @Override
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(latestNews);
+        }
+    }
+
+    public void setLatestNews(String news) {
+        this.latestNews = news;
+        notifyObservers();
+    }
+}
+
+// Concrete Observer
+class Subscriber implements Observer {
+    private String name;
+
+    public Subscriber(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(String news) {
+        System.out.println(name + " received news update: " + news);
+    }
+}
+
+// Main class to demonstrate Observer pattern
+public class ObserverPatternDemo {
+    public static void main(String[] args) {
+        NewsAgency agency = new NewsAgency();
+        Subscriber subscriber1 = new Subscriber("Alice");
+        Subscriber subscriber2 = new Subscriber("Bob");
+
+        agency.registerObserver(subscriber1);
+        agency.registerObserver(subscriber2);
+
+        agency.setLatestNews("Breaking News: Observer Pattern Demo!");
+    }
+}
